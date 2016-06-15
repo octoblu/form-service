@@ -1,0 +1,21 @@
+html {
+  min-height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: stretch;
+  align-content: stretch;
+}
+
+body, div#app {
+  flex: 1 100%;
+  display: flex;
+  max-width: 100%;
+}
+
+div#main-container {
+  display: flex;
+  flex: 1;
+  flex-grow: 1;
+  flex-direction: column;
+  max-width: 100%;
+}

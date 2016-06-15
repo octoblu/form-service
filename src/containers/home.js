@@ -1,7 +1,51 @@
-import React from 'react';
+import React      from 'react'
+import superagent from 'superagent'
+import url        from 'url'
+import {Spinner,ErrorState}  from 'zooid-ui'
+import Form  from '../components/Form'
 
-const Home = () => {
-  return <h2>Home Page</h2>;
-};
+export default class Home extends React.Component {
+  state = {loading: true}
 
-export default Home;
+  componentWillMount = () => {
+    const {schemaUrl, postUrl, bearerToken} = url.parse(location.href, true).query
+    this.setState({schemaUrl, postUrl, bearerToken})
+  }
+
+  componentDidMount = () => {
+    this.fetchSchema()
+  }
+
+  fetchSchema = () => {
+    if (!this.state.schemaUrl) return
+
+    this.setState({loading: true})
+    superagent
+      .get(this.state.schemaUrl)
+      .set('Accept', 'application/json')
+      .end((error, response) => {
+        if (error) return this.setState({error, schema: null, loading: false})
+
+        this.setState({schema: JSON.parse(response.text), loading: false})
+      })
+  }
+
+  onSubmit = (model) => {
+    superagent
+      .post(this.state.postUrl)
+      .set('Authorization', `Bearer ${this.state.bearerToken}`)
+      .send(model)
+      .end((error, response) => {
+        console.log('onSubmitted', {error, response})
+      })
+  }
+
+  render = () => {
+    const {schema, loading, error} = this.state
+
+    if (error) return <ErrorState description={error.message} />
+    if (loading) return <Spinner />
+    if (!schema) return <ErrorState description="No schema, but done loading" />
+    return <Form schema={schema} onSubmit={this.onSubmit} />
+  }
+}

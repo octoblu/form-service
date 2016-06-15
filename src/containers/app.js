@@ -1,18 +1,19 @@
 import React, { PropTypes } from 'react';
-
-const propTypes = {
-  children: PropTypes.element.isRequired,
-};
+import 'zooid-ui/dist/style.css'
+import './styles.css'
+import {AppBar} from 'zooid-ui'
 
 export default class App extends React.Component {
+  static propTypes = {
+    children: PropTypes.element.isRequired,
+  }
+
   render() {
     return (
-      <div>
-        <h1>Zooid App</h1>
+      <div id="main-container">
+        <AppBar title="Form Service" />
         {this.props.children}
       </div>
-    );
+    )
   }
 }
-
-App.propTypes = propTypes;
