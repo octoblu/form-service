@@ -1,12 +1,15 @@
-import React from 'react'
+import React            from 'react'
 import JsonSchemaEditor from 'zooid-ui-json-schema-editor'
-import styles from './Form.css'
+import styles           from './Form.css'
 
 const Form = ({schema, onSubmit}) => {
+  const model = {}
+  const defaultForm = ["*"]
+
   return (
     <div className={styles.Form}>
       <h2>{schema.title || "Form"}</h2>
-      <JsonSchemaEditor schema={schema} onSubmit={onSubmit} />
+      <JsonSchemaEditor schema={schema} form={defaultForm} onSubmit={onSubmit} model={model}/>
     </div>
   )
 };
