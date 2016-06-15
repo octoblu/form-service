@@ -19,3 +19,11 @@ div#main-container {
   flex-direction: column;
   max-width: 100%;
 }
+
+.FormPage {
+  background-color: #fff;
+  padding: 2rem;
+
+  display: flex;
+  flex-direction: column;
+}

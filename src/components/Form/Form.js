@@ -5,6 +5,7 @@ import styles from './Form.css'
 const Form = ({schema, onSubmit}) => {
   return (
     <div className={styles.Form}>
+      <h2>{schema.title || "Form"}</h2>
       <JsonSchemaEditor schema={schema} onSubmit={onSubmit} />
     </div>
   )
