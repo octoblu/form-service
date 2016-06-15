@@ -5,28 +5,30 @@ import {Spinner,ErrorState}  from 'zooid-ui'
 import Form  from '../components/Form'
 
 export default class Home extends React.Component {
-  state = {loading: true}
-
-  componentWillMount = () => {
-    const {schemaUrl, postUrl, bearerToken} = url.parse(location.href, true).query
-    this.setState({schemaUrl, postUrl, bearerToken})
+  constructor(props) {
+    super(props)
+    this.state = {
+      error: null,
+      loading: true,
+      schema: null,
+    }
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     this.fetchSchema()
   }
 
-  fetchSchema = () => {
-    if (!this.state.schemaUrl) return
-
+  fetchSchema(){
+    const {schemaUrl, postUrl, bearerToken} = url.parse(location.href, true).query
     this.setState({loading: true})
     superagent
-      .get(this.state.schemaUrl)
+      .get(schemaUrl)
       .set('Accept', 'application/json')
       .end((error, response) => {
-        if (error) return this.setState({error, schema: null, loading: false})
-
-        this.setState({schema: JSON.parse(response.text), loading: false})
+        if (error) {
+          return this.setState({error, schema: null, loading: false})
+        }
+        this.setState({schema: JSON.parse(response.text), loading: false, postUrl: postUrl})
       })
   }
 
@@ -40,9 +42,8 @@ export default class Home extends React.Component {
       })
   }
 
-  render = () => {
+  render() {
     const {schema, loading, error} = this.state
-
     if (error) return <ErrorState description={error.message} />
     if (loading) return <Spinner />
     if (!schema) return <ErrorState description="No schema, but done loading" />

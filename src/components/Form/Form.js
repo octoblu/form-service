@@ -1,5 +1,5 @@
 import React            from 'react'
-import JsonSchemaEditor from 'zooid-ui-json-schema-editor'
+import JsonSchemaEditor from '../JsonSchemaEditor'
 import styles           from './Form.css'
 
 const Form = ({schema, onSubmit}) => {
@@ -9,7 +9,12 @@ const Form = ({schema, onSubmit}) => {
   return (
     <div className={styles.Form}>
       <h2>{schema.title || "Form"}</h2>
-      <JsonSchemaEditor schema={schema} form={defaultForm} onSubmit={onSubmit} model={model}/>
+      <JsonSchemaEditor
+        schema={schema}
+        form={defaultForm}
+        onSubmit={onSubmit}
+        model={model}
+      />
     </div>
   )
 };
