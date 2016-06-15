@@ -31,12 +31,16 @@ export default class Home extends React.Component {
   }
 
   onSubmit = (model) => {
+    this.setState({loading: true})
     superagent
       .post(this.state.postUrl)
+      .redirects(0)
       .set('Authorization', `Bearer ${this.state.bearerToken}`)
       .send(model)
       .end((error, response) => {
-        console.log('onSubmitted', {error, response})
+        if (error) return this.setState({error, schema: null, loading: false})
+
+        window.location = response.headers.location
       })
   }
 
