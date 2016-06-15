@@ -41,7 +41,6 @@ export default class Home extends React.Component {
       .send(model)
       .end((error, response) => {
         if (error) return this.setState({error, schema: null, loading: false})
-
         window.location = response.headers.location
       })
   }
