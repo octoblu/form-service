@@ -41,15 +41,17 @@ export default class Home extends React.Component {
       .send(model)
       .end((error, response) => {
         if (error) return this.setState({error, schema: null, loading: false})
+    
+        if (!response.headers.location) return this.setState({error, loading: false})
         window.location = response.headers.location
       })
   }
 
   render() {
-    const {schema, loading, error} = this.state
-    if (error) return <ErrorState description={error.message} />
+    const {schema, postUrl, loading, error} = this.state
     if (loading) return <Spinner />
-    if (!schema) return <ErrorState description="No schema, but done loading" />
-    return <Form schema={schema} onSubmit={this.onSubmit} />
+    if (!schema || !postUrl) return <ErrorState description="Sorry! Looks like we couldn't find your schema or postUrl!" />
+    if (error && schema)  return <ErrorState description={error.message} />
+    if (schema) return <Form schema={schema} onSubmit={this.onSubmit} />
   }
 }
