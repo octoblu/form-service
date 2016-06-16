@@ -7,56 +7,87 @@ import Form  from '../components/Form'
 export default class Home extends React.Component {
   static initialState = {
     error: null,
-    loading: null,
+    loadingSchema: null,
+    loadingFormSchema: null,
+    loadingSubmit: null,
     schema: null,
+    formSchema: null,
     schemaUrl: null,
     postUrl: null,
     bearerToken: null,
   }
   state = {...Home.initialState}
 
+  componentWillMount = () => {
+    const {schemaUrl, formSchemaUrl, postUrl, bearerToken} = url.parse(location.href, true).query
+    this.setState({schemaUrl, formSchemaUrl, postUrl, bearerToken})
+  }
+
   componentDidMount = () => {
     this.fetchSchema()
+    this.fetchFormSchema()
   }
 
-  componentWillMount = () => {
-    const {schemaUrl, postUrl, bearerToken} = url.parse(location.href, true).query
-    this.setState({schemaUrl, postUrl, bearerToken})
-  }
+  fetchFormSchema = () => {
+    if(!this.state.formSchemaUrl) return
 
-  fetchSchema = () => {
-    this.setState({loading: true})
+    this.setState({loadingFormSchema: true})
 
     superagent
-      .get(this.state.schemaUrl)
+      .get(this.state.formSchemaUrl)
       .set('Accept', 'application/json')
       .end((error, response) => {
         if (error) {
           return this.setState({...Home.initialState, error})
         }
-        this.setState({schema: JSON.parse(response.text), loading: false})
+        this.setState({formSchema: JSON.parse(response.text), loadingFormSchema: false})
+      })
+  }
+
+  fetchSchema = () => {
+    this.setState({loadingSchema: true})
+
+    superagent
+      .get(this.state.schemaUrl)
+      .set('Accept', 'application/json')
+      .end((error, response) => {
+        const schema = this.parseResponse(response)
+        if (error) return this.setState({...Home.initialState, error})
+        if (!schema) return this.setState({...Home.initialState, new Error('Could not load the schema')})
+
+        this.setState({schema: schema, loadingSchema: false})
       })
   }
 
   onSubmit = (model) => {
-    this.setState({loading: true})
+    this.setState({loadingSubmit: true})
     superagent
       .post(this.state.postUrl)
       .redirects(0)
       .set('Authorization', `Bearer ${this.state.bearerToken}`)
       .send(model)
       .end((error, response) => {
-        if (error) return this.setState({error, schema: null, loading: false})
+        if (error) return this.setState({...Home.initialState, error})
 
         window.location = response.headers.location
       })
   }
 
+  parseResponse = (response) => {
+    if (!response) return
+    try {
+      return JSON.parse(response.text)
+    }
+  }
+
   render = () => {
-    const {schema, postUrl, loading, error} = this.state
+    const {formSchema, schema, postUrl, loadingSchema, loadingFormSchema, loadingSubmit, error} = this.state
+    const loading = loadingSchema || loadingFormSchema || loadingSubmit
+
+    if (!postUrl) return <ErrorState description="Required GET parameter 'postUrl' is missing." />
+    if (error)  return <ErrorState description={error.message} />
     if (loading) return <Spinner />
-    if (!schema || !postUrl) return <ErrorState description="Sorry! Looks like we couldn't find your schema or postUrl!" />
-    if (error && schema)  return <ErrorState description={error.message} />
-    if (schema) return <Form schema={schema} onSubmit={this.onSubmit} />
+
+    return <Form schema={schema} formSchema={formSchema} onSubmit={this.onSubmit} />
   }
 }

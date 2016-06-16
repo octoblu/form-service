@@ -2,16 +2,15 @@ import React            from 'react'
 import JsonSchemaEditor from '../JsonSchemaEditor'
 import styles           from './Form.css'
 
-const Form = ({schema, onSubmit}) => {
+const Form = ({schema, formSchema, onSubmit}) => {
   const model = {}
-  const defaultForm = ["*"]
 
   return (
     <div className={styles.Form}>
       <h2>{schema.title || "Form"}</h2>
       <JsonSchemaEditor
         schema={schema}
-        form={defaultForm}
+        form={formSchema}
         onSubmit={onSubmit}
         model={model}
       />
@@ -21,6 +20,7 @@ const Form = ({schema, onSubmit}) => {
 
 Form.propTypes = {
   schema: React.PropTypes.object.isRequired,
+  formSchema: React.PropTypes.array,
   onSubmit: React.PropTypes.func.isRequired,
 }
 
