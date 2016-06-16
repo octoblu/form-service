@@ -1,3 +1,28 @@
 language: node_js
 node_js:
-  - '5'
+- '5'
+branches:
+  only:
+  - /^v[0-9]/
+env:
+  global:
+  - AWS_ACCESS_KEY_ID=AKIAJH2D5IPIRHYJT5IA
+  - secure: imVRM84eCLrJp/HWvoQ+DLLeRiOAPAP8lDoIUAzyVA6BxnwLp++KTVSSny5DfU0XMd5ZNAXEyRiZl2vm9c55c3JOZWOe50HynoLxCQyFRVFx6MpaC9ea5r2X+xzWpYwKw7b0K8Xr7ZOhprsj3pOofPRlkCKNefR1xIPZ4Uq4ekWacTXvYFNmBqLC5PUL85ZqUZq48oywt1YyqiFY47ZKsFsoWvAuZnN9AmpFCnwoOvN1PhXnSnr69FBPWTf3zdCz6/R9pTtNvQfah2fCqGMHPlz0QFfM0DUUbGa3ucihFDvY3sDE0nA4e5Xl77RAaWT9ne6BrNxmFJwJfFXo4nSUn+UCl+/mQolqQIu3HwkkZd2dnsb/RsjjGeQ/8Q+O4w1SlIoopQRNpw3E/fhzmrE9l7XEv+GIGy4rT8h6UL+vCI2WYwSA8G3Xze0D5UysL6eSlssjgFpLDRKd2BHa/zVe948kh1qYXVoksk5Wgd9PPDNVkXQEyJ6VYNLilAZDgveKFrSJfS6NRdD/D7Ti0sz6GnNGLPplHmN0yplc9RF+P9seTrcYvKP9lVn5kVVJCV3SLqREUPeD/HbShadavMONSdJ7PnQE+cscLKGphCP9a7Q7DUOdoO0n5ghNh2Ve9SPjBGr31+lbpDXLiPilfBHk8Ng5+ADZeEEMr3z0F5C/ZR4=
+before_deploy:
+- npm run build
+- cp index.html dist
+- for file in `find dist -type f`; do gzip --best $file && mv $file.gz $file; done
+after_deploy:
+- ./deploy/invalidate-cloudfront.sh $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY $TRAVIS_BRANCH
+deploy:
+- provider: s3
+  access_key_id: AKIAJH2D5IPIRHYJT5IA
+  secret_access_key:
+    secure: "imVRM84eCLrJp/HWvoQ+DLLeRiOAPAP8lDoIUAzyVA6BxnwLp++KTVSSny5DfU0XMd5ZNAXEyRiZl2vm9c55c3JOZWOe50HynoLxCQyFRVFx6MpaC9ea5r2X+xzWpYwKw7b0K8Xr7ZOhprsj3pOofPRlkCKNefR1xIPZ4Uq4ekWacTXvYFNmBqLC5PUL85ZqUZq48oywt1YyqiFY47ZKsFsoWvAuZnN9AmpFCnwoOvN1PhXnSnr69FBPWTf3zdCz6/R9pTtNvQfah2fCqGMHPlz0QFfM0DUUbGa3ucihFDvY3sDE0nA4e5Xl77RAaWT9ne6BrNxmFJwJfFXo4nSUn+UCl+/mQolqQIu3HwkkZd2dnsb/RsjjGeQ/8Q+O4w1SlIoopQRNpw3E/fhzmrE9l7XEv+GIGy4rT8h6UL+vCI2WYwSA8G3Xze0D5UysL6eSlssjgFpLDRKd2BHa/zVe948kh1qYXVoksk5Wgd9PPDNVkXQEyJ6VYNLilAZDgveKFrSJfS6NRdD/D7Ti0sz6GnNGLPplHmN0yplc9RF+P9seTrcYvKP9lVn5kVVJCV3SLqREUPeD/HbShadavMONSdJ7PnQE+cscLKGphCP9a7Q7DUOdoO0n5ghNh2Ve9SPjBGr31+lbpDXLiPilfBHk8Ng5+ADZeEEMr3z0F5C/ZR4="
+  bucket: form-service.octoblu.com
+  region: us-west-2
+  skip_cleanup: true
+  detect_encoding: true
+  local-dir: dist
+  on:
+    tags: true
