@@ -67,7 +67,8 @@ export default class Home extends React.Component {
       .end((error, response) => {
         if (error) return this.setState({...Home.initialState, error})
 
-        window.location = response.headers.location
+        if(response.headers.locations) return window.location = response.headers.location
+        this.setState({loadingSubmit: false})
       })
   }
 
