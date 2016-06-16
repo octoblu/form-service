@@ -1,9 +1,10 @@
-import React            from 'react'
-import JsonSchemaEditor from '../JsonSchemaEditor'
-import styles           from './Form.css'
+import React              from 'react'
+import JsonSchemaEditor   from 'zooid-json-schema-editor'
+import JsonSchemaDefaults from 'json-schema-defaults'
+import styles             from './Form.css'
 
 const Form = ({schema, formSchema, onSubmit}) => {
-  const model = {}
+  const model = JsonSchemaDefaults(schema)
 
   return (
     <div className={styles.Form}>

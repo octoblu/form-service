@@ -12,7 +12,6 @@ export default class Home extends React.Component {
     loadingSubmit: null,
     schema: null,
     formSchema: null,
-    schemaUrl: null,
     postUrl: null,
     bearerToken: null,
   }
@@ -20,21 +19,20 @@ export default class Home extends React.Component {
 
   componentWillMount = () => {
     const {schemaUrl, formSchemaUrl, postUrl, bearerToken} = url.parse(location.href, true).query
-    this.setState({schemaUrl, formSchemaUrl, postUrl, bearerToken})
+    this.postUrl = postUrl
+    this.bearerToken = bearerToken
+    this.setState({postUrl, bearerToken})
+    this.fetchSchema(schemaUrl)
+    this.fetchFormSchema(formSchemaUrl)
   }
 
-  componentDidMount = () => {
-    this.fetchSchema()
-    this.fetchFormSchema()
-  }
-
-  fetchFormSchema = () => {
-    if(!this.state.formSchemaUrl) return
+  fetchFormSchema = (formSchemaUrl) => {
+    if(!formSchemaUrl) return
 
     this.setState({loadingFormSchema: true})
 
     superagent
-      .get(this.state.formSchemaUrl)
+      .get(formSchemaUrl)
       .set('Accept', 'application/json')
       .end((error, response) => {
         if (error) {
@@ -44,16 +42,16 @@ export default class Home extends React.Component {
       })
   }
 
-  fetchSchema = () => {
+  fetchSchema = (schemaUrl) => {
     this.setState({loadingSchema: true})
 
     superagent
-      .get(this.state.schemaUrl)
+      .get(schemaUrl)
       .set('Accept', 'application/json')
       .end((error, response) => {
         const schema = this.parseResponse(response)
         if (error) return this.setState({...Home.initialState, error})
-        if (!schema) return this.setState({...Home.initialState, new Error('Could not load the schema')})
+        if (!schema) return this.setState({...Home.initialState, error: new Error('Could not load the schema')})
 
         this.setState({schema: schema, loadingSchema: false})
       })
@@ -77,6 +75,8 @@ export default class Home extends React.Component {
     if (!response) return
     try {
       return JSON.parse(response.text)
+    } catch (error) {
+      return
     }
   }
 
@@ -84,8 +84,8 @@ export default class Home extends React.Component {
     const {formSchema, schema, postUrl, loadingSchema, loadingFormSchema, loadingSubmit, error} = this.state
     const loading = loadingSchema || loadingFormSchema || loadingSubmit
 
-    if (!postUrl) return <ErrorState description="Required GET parameter 'postUrl' is missing." />
     if (error)  return <ErrorState description={error.message} />
+    if (!postUrl) return <ErrorState description="Required GET parameter 'postUrl' is missing." />
     if (loading) return <Spinner />
 
     return <Form schema={schema} formSchema={formSchema} onSubmit={this.onSubmit} />
