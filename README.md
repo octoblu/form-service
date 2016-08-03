@@ -18,6 +18,10 @@ This service lets you pass a schema url and a post url as query parameters to a 
 
 ### Example call
 
+```
+https://form-service.octoblu.com/?schemaUrl=&postUrl=
+```
+
 https://form-service.octoblu.com/?schemaUrl=https://gist.githubusercontent.com/sqrtofsaturn/88bba93d271a3c97591880119b16ca63/raw/9373e1ab09e6d7f70e3c05eb1f67c784afc5d6cc/sonos.json&postUrl=https://triggers.octoblu.com/flows/3494aa3d-08c6-46d3-80c8-bb640de992a2/triggers/5860b0d0-3418-11e6-a298-19a48a9ab8ed
 
 ### JSON Example
