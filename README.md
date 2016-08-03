@@ -28,6 +28,8 @@ https://form-service.octoblu.com/?schemaUrl=https://gist.githubusercontent.com/s
 
 We've found it easiest to host your json in a gist on github and link to the raw.
 
+You can learn more about creating schema from schemaform.io !
+
 ```
 {
   "type": "object",
