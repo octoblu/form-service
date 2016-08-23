@@ -4,25 +4,20 @@ node_js:
 branches:
   only:
   - /^v[0-9]/
-env:
-  global:
-  - AWS_ACCESS_KEY_ID=AKIAJH2D5IPIRHYJT5IA
-  - secure: XXQUBbwP3ZPKs7JLz8wW+/7Qpp9QllXct0wNz2Au1eDll+HeTFPHSpAlkxxFw/EHc8e9RB1vXUcR/W0RnNzzpihfK2TNkhbdxiVe+aS3b014Vwqv+5MqbKGAR9FhyO15ykPUYPiTlIWXbjCGPbUtbX1dpWeotvGHUPLBX5sJJoxX+0ulkh/hHc9FGNjewHmNNTfPRcEdKPTmm2wbnfyeISLPkzPlE2JtxwIl1sMU3HI3sTYsykNoh9nWgcuVL9ZWt7XPvVBqTA9i6TwWBZ161bahlpaM50v1wJVb85uLFhK3Keu6kbTr+hlRax0/VzJaop4cNmZFFyJZP2Q/ako8G2tziJbpMgRXTO4OxXfo1AYAGuEaHrvZMeODHpKuv2AoA+wsMfB37XeIcWQV4sjaoh1Yi66xAVXK6f6TXDOJputsr0gZPhf9JGFSOi+4XvzniMCq0QXuXcTyS5G1lmddG6S1N2WVrhNGU4ojv64sKs45xoJ8EV21DTUTdwxz7adYODqze0lFR0MUfrnRQLMToQE4FGHsSV04v/SLfHaB1X+cpe9WBxGYK1aDQZu1xmfe+pmRs2YCXEBXVf618EgF/GHcoiZu8z+QNuQuiVB2LrLzr8ki4k56gKvbbVjPQuQjs41j6JkerpbSthcazhSGzmjgupzlpyMlkYv4lfC4v9s=
-before_deploy:
+after_success:
 - npm run build
-- cp index.html dist
-- for file in `find dist -type f`; do gzip --best $file && mv $file.gz $file; done
-after_deploy:
-- ./deploy/invalidate-cloudfront.sh $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY $TRAVIS_BRANCH
+- export PKG_VERSION="$(node -e 'console.log(require("./package.json").version)')"
+- if [ -z "$PKG_VERSION" ]; then echo 'Missing PKG_VERSION env' && exit 1; fi
+- mkdir -p dpl_assets/v$PKG_VERSION
+- cp -r dist/* dpl_assets/v$PKG_VERSION
 deploy:
-  provider: s3
+- provider: s3
   access_key_id: AKIAJH2D5IPIRHYJT5IA
-  secret_access_key:
+  secret_access_key: &1
     secure: DjbGYLMd+kii0wuKFlRSWtJL32BVtwii5HFLE/aU65kZfme/XGhVjzNZS1XR+7o5XY5iqUYwVF0sHHpA/v5NPJqTUntJefvz3ako5Ne7yGT2Ln0/V+mlUA42bOttIfTb485XLBidg5RvIyu0v/ahpHOocxc2yRzITFJ9qK6sOODS+17tBciFN8JDaQvTdDz0nwIH3Vjj3LrgUJ6Z3F1s0KiqhzLn5Ovg/2AxbnHuu0ELcV0n0K6tBrBIMSPQ20QQEWOKvZUavjLJDSOAs2T8EER9yV2xEeNZDym2rpDSDW64DRH50bk2rFuQ7fokgEocFRVtGreEoYjpOYSMlMwtZXtJoKwfeoTGQTzs3JuQg4jkN7qpqziF33J9W92Pp6WJu1l2YxuuA0wDCzBXFQdgLbW3uuGh2fF5Ok8Ypc7hFq4pm7osAnEQtJtvE8QlTR052kxtaK5G9C8ni5dULkJ58qApvABy6O5yS9GSQ50VmGC47//IpxEYNcuDFOTqCnA11iFt0o5NGP1anNvBh+ytFRUG4v/Z6LXemdUCSJKklmw5Y7ldDSHnsYIxoB8bE1nET3Mov4LhDsd3lYs8IYuklHqNQzERrkvP3rF9wvEJH0aro5sugvRL7g40f9GMgb8KCum67ASH6EJljadBF9PFTaX2wdlqN1vCTJDvtah6L6U=
-  bucket: form-service.octoblu.com
-  local-dir: dist
-  region: us-west-2
+  bucket: form-service-static.octoblu.com
+  local_dir: dpl_assets
   skip_cleanup: true
-  detect_encoding: true
+  region: us-west-2
   on:
     tags: true
