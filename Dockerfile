@@ -18,7 +18,7 @@ RUN cat package.json \
 
 COPY templates/ templates/
 
-RUN curl -sSL "http://form-service-static.octoblu.com/$(cat .PKG_VERSION)/index.html" -o "/usr/share/nginx/html/index.html"
+RUN curl -sSL "https://form-service-static.octoblu.com/$(cat .PKG_VERSION)/index.html" -o "/usr/share/nginx/html/index.html"
 
 RUN sed -e \
   "s/PKG_VERSION/$(cat .PKG_VERSION)/" \
