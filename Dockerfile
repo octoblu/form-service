@@ -16,9 +16,8 @@ RUN cat package.json \
       | sed 's/[",]//g' \
       | tr -d '[[:space:]]' > .PKG_VERSION
 
+COPY scripts/ scripts/
 COPY templates/ templates/
-
-RUN curl -sSL "https://form-service-static.octoblu.com/$(cat .PKG_VERSION)/index.html" -o "/usr/share/nginx/html/index.html"
 
 RUN sed -e \
   "s/PKG_VERSION/$(cat .PKG_VERSION)/" \
@@ -26,3 +25,5 @@ RUN sed -e \
   /etc/nginx/conf.d/default.conf
 
 RUN cp /templates/*.conf /etc/nginx/conf.d/
+
+CMD [ "./scripts/run-nginx.sh" ]
