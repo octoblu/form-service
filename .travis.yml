@@ -4,6 +4,8 @@ node_js:
 branches:
   only:
   - /^v[0-9]/
+env:
+  global: CDN=https://form-service-static.octoblu.com
 after_success:
 - npm run build
 - export PKG_VERSION="$(node -e 'console.log(require("./package.json").version)')"
