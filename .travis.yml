@@ -3,6 +3,8 @@ node_js:
 - '5'
 env:
   global: CDN=https://form-service-static.octoblu.com
+before_script:
+- npm install
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 - npm run build
@@ -21,6 +23,3 @@ deploy:
   region: us-west-2
   on:
     tags: true
-branches:
-  only:
-  - "/^v[0-9]/"
