@@ -1,6 +1,14 @@
 # form-service
 Generic Form Service using JSON Schema
 
+[![Build Status](https://travis-ci.org/octoblu/form-service.svg?branch=master)](https://travis-ci.org/octoblu/form-service)
+[![Test Coverage](https://codecov.io/gh/octoblu/form-service/branch/master/graph/badge.svg)](https://codecov.io/gh/octoblu/form-service)
+[![Dependency status](http://img.shields.io/david/octoblu/form-service.svg?style=flat)](https://david-dm.org/octoblu/form-service)
+[![devDependency Status](http://img.shields.io/david/dev/octoblu/form-service.svg?style=flat)](https://david-dm.org/octoblu/form-service#info=devDependencies)
+[![Slack Status](http://community-slack.octoblu.com/badge.svg)](http://community-slack.octoblu.com)
+
+[![NPM](https://nodei.co/npm/form-service.svg?style=flat)](https://npmjs.org/package/form-service)
+
 This service lets you pass a schema url and a post url as query parameters to a page that generates a form that on submit posts to that url. Its great for building forms that can post to a trigger in Octoblu!
 
 ## Example
