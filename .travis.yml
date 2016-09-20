@@ -5,8 +5,6 @@ env:
   global: CDN=https://form-service-static.octoblu.com
 before_script:
 - npm install
-after_success:
-- bash <(curl -s https://codecov.io/bash)
 - npm run build
 - export PKG_VERSION="$(node -e 'console.log(require("./package.json").version)')"
 - if [ -z "$PKG_VERSION" ]; then echo 'Missing PKG_VERSION env' && exit 1; fi
@@ -23,3 +21,8 @@ deploy:
   region: us-west-2
   on:
     tags: true
+after_success:
+- npm run coverage
+- npm run mocha:json
+- bash <(curl -s https://codecov.io/bash)
+- bash <(curl -s https://codecov.octoblu.com/bash)

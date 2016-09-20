@@ -39,3 +39,4 @@ node_modules
 .*-dev
 
 dpl_*
+.nyc_output
