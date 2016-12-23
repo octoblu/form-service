@@ -1,6 +1,6 @@
 {
   "name": "form-service",
-  "version": "2.0.11",
+  "version": "2.0.12",
   "description": "form-service",
   "main": "index.js",
   "scripts": {
@@ -46,6 +46,7 @@
     "react-dom": "^15.0.2",
     "react-router": "^2.0.1",
     "recursive-readdir": "^2.0.0",
+    "regjsgen": "^0.3.0",
     "rimraf": "^2.5.4",
     "strict-uri-encode": "^2.0.0",
     "strip-ansi": "^3.0.1",
@@ -54,7 +55,7 @@
     "webpack": "^1.13.2",
     "webpack-dev-server": "^1.15.0",
     "zooid-json-schema-editor": "^3.0.0",
-    "zooid-ui": "^8.0.2"
+    "zooid-ui": "^8.0.3"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.6",
