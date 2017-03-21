@@ -20,7 +20,7 @@ module.exports = {
     new webpack.NoEmitOnErrorsPlugin()
   ],
   resolve: {
-    extensions: ['.js', '.jsx', '.json'],
+    extensions: ['', '.js', '.jsx', '.json'],
     alias: {
       config: path.join(__dirname, 'src', 'config', 'development')
     }

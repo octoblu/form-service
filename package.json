@@ -11,7 +11,7 @@
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "mocha:json": "mocha --reporter=json > coverage/mocha.json",
-    "test": "mocha",
+    "test": "NODE_ENV=test mocha",
     "test:watch": "mocha -w -R mocha-multi --reporter-options spec=-,mocha-osx-reporter=-"
   },
   "keywords": [

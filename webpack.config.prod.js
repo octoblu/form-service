@@ -30,7 +30,7 @@ module.exports = {
     publicPath: '/'
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.json'],
+    extensions: ['', '.js', '.jsx', '.json'],
     alias: {
       config: path.join(__dirname, 'src', 'config', 'development')
     }
