@@ -1,7 +1,8 @@
 import React      from 'react'
 import superagent from 'superagent'
 import url        from 'url'
-import {Spinner,ErrorState}  from 'zooid-ui'
+import Spinner  from 'zooid-spinner'
+import ErrorState from 'zooid-error-state'
 import Form  from '../components/Form'
 
 export default class Home extends React.Component {
@@ -17,7 +18,7 @@ export default class Home extends React.Component {
   }
   state = {...Home.initialState}
 
-  componentWillMount = () => {
+  componentWillMount() {
     const {schemaUrl, formSchemaUrl, postUrl, bearerToken} = url.parse(location.href, true).query
     this.postUrl = postUrl
     this.bearerToken = bearerToken
@@ -81,7 +82,7 @@ export default class Home extends React.Component {
     }
   }
 
-  render = () => {
+  render() {
     const {formSchema, schema, postUrl, loadingSchema, loadingFormSchema, loadingSubmit, error} = this.state
     const loading = loadingSchema || loadingFormSchema || loadingSubmit
 
