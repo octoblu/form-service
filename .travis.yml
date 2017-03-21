@@ -1,29 +1,6 @@
 language: node_js
 node_js:
-  - '5'
-env:
-  global: 'CDN=https://form-service-static.octoblu.com'
-before_script:
-  - npm install
-  - npm run build
-  - >-
-    export PKG_VERSION="$(node -e
-    'console.log(require("./package.json").version)')"
-  - 'if [ -z "$PKG_VERSION" ]; then echo ''Missing PKG_VERSION env'' && exit 1; fi'
-  - mkdir -p dpl_assets/v$PKG_VERSION
-  - cp -r dist/* dpl_assets/v$PKG_VERSION
-deploy:
-  - provider: s3
-    access_key_id: AKIAJH2D5IPIRHYJT5IA
-    secret_access_key:
-      secure: >-
-        DjbGYLMd+kii0wuKFlRSWtJL32BVtwii5HFLE/aU65kZfme/XGhVjzNZS1XR+7o5XY5iqUYwVF0sHHpA/v5NPJqTUntJefvz3ako5Ne7yGT2Ln0/V+mlUA42bOttIfTb485XLBidg5RvIyu0v/ahpHOocxc2yRzITFJ9qK6sOODS+17tBciFN8JDaQvTdDz0nwIH3Vjj3LrgUJ6Z3F1s0KiqhzLn5Ovg/2AxbnHuu0ELcV0n0K6tBrBIMSPQ20QQEWOKvZUavjLJDSOAs2T8EER9yV2xEeNZDym2rpDSDW64DRH50bk2rFuQ7fokgEocFRVtGreEoYjpOYSMlMwtZXtJoKwfeoTGQTzs3JuQg4jkN7qpqziF33J9W92Pp6WJu1l2YxuuA0wDCzBXFQdgLbW3uuGh2fF5Ok8Ypc7hFq4pm7osAnEQtJtvE8QlTR052kxtaK5G9C8ni5dULkJ58qApvABy6O5yS9GSQ50VmGC47//IpxEYNcuDFOTqCnA11iFt0o5NGP1anNvBh+ytFRUG4v/Z6LXemdUCSJKklmw5Y7ldDSHnsYIxoB8bE1nET3Mov4LhDsd3lYs8IYuklHqNQzERrkvP3rF9wvEJH0aro5sugvRL7g40f9GMgb8KCum67ASH6EJljadBF9PFTaX2wdlqN1vCTJDvtah6L6U=
-    bucket: form-service-static.octoblu.com
-    local_dir: dpl_assets
-    skip_cleanup: true
-    region: us-west-2
-    'on':
-      tags: true
+  - '7'
 after_success:
   - npm run coverage
   - 'npm run mocha:json'
