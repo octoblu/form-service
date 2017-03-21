@@ -35,6 +35,9 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
+    alias: {
+      config: path.join(__dirname, 'src', 'config', 'development')
+    }
   },
   plugins: [
     // Generates an `index.html` file with the <script> injected.
